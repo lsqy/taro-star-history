@@ -3,7 +3,8 @@ import { View, Text, Button } from "@tarojs/components"
 
 export default class Login extends Component {
   state = {
-    context: {}
+    context: {},
+    starInfomation: {}
   }
 
   componentWillMount() {}
@@ -19,7 +20,7 @@ export default class Login extends Component {
   getLogin = () => {
     Taro.cloud
       .callFunction({
-        name: "login",
+        name: "login_test",
         data: {}
       })
       .then(res => {
@@ -29,11 +30,27 @@ export default class Login extends Component {
       })
   }
 
+  getStarList() {
+    Taro.cloud.callFunction({
+      name: 'github_api',
+      data: {
+        repo: 'lsqy/taro-music'
+      }
+    }).then(res => {
+      this.setState({
+        starInfomation: res.result
+      })
+    })
+  }
+
   render() {
+    const { starInfomation, context } = this.state
     return (
       <View className='index'>
         <Button onClick={this.getLogin}>获取登录云函数</Button>
-        <Text>context：{JSON.stringify(this.state.context)}</Text>
+        <Button onClick={this.getStarList}>获取star列表</Button>
+        <View>context：{JSON.stringify(context, null, 4)}</View>
+        <View>starInfomation: {JSON.stringify(starInfomation, null, 4)}</View>
       </View>
     )
   }
