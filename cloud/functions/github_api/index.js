@@ -6,6 +6,10 @@ cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
 
+var _include_headers = function(body, response, resolveWithFullResponse) {
+  return {'headers': response.headers, 'data': body};
+};
+
 exports.main = async (event, context) => {
   console.log('event', event)
   console.log('context', context)
@@ -19,7 +23,8 @@ exports.main = async (event, context) => {
       'User-Agent': 'taro-star-history',
       // Authorization: `token ${token}`
     },
-    json: true
+    json: true,
+    transform: _include_headers
   };
   const starRes = await rp(star_params)
   return {
